@@ -1,7 +1,6 @@
 from utils import *
 
-from flask import Blueprint, request, make_response, send_file, Response
-from werkzeug.datastructures import Headers
+from flask import Blueprint, request, make_response
 import uuid
 
 cashbook = Blueprint('cashbook', __name__)
@@ -15,7 +14,7 @@ def cashbook_index():
         }
         check_input(query)
         res = query_objects(Cashbook, query, [
-            'id', 'title', 'content',
+            'id', 'title', 'content', 'template',
             {'name': 'accounting_date', 'serializer': 'date'},
         ])
         return make_json_response(res)
@@ -28,7 +27,7 @@ def cashbook_index():
         }
         check_input(data)
         create_object(Cashbook, data, [
-            'id', 'title', 'content',
+            'id', 'title', 'content', 'template',
             {'name': 'accounting_date', 'typer': 'date'},
         ])
         return make_json_response({
@@ -40,11 +39,12 @@ def cashbook_index():
             'id': request.form.get('id', 'missed'),
             'title': request.form.get('title', None),
             'content': request.form.get('content', None),
+            'template': request.form.get('template', None),
             'accounting_date': request.form.get('accounting_date', None),
         }
         check_input(data)
         modify_obj(Cashbook, {'id': data['id']}, data, [
-            'id', 'title', 'content',
+            'id', 'title', 'content', 'template',
             {'name': 'accounting_date', 'typer': 'date'},
         ])
         return make_json_response({
@@ -66,7 +66,7 @@ def cashbook_index():
 @cashbook.route('/list', methods=['GET'])
 def cashbook_list():
     res = query_objects(Cashbook, request.args, [
-        'id', 'title', {'name': 'accounting_date', 'serializer': 'date'},
+        'id', 'title', 'template', {'name': 'accounting_date', 'serializer': 'date'},
     ])
     return make_json_response(res)
 
@@ -78,12 +78,12 @@ def cashbook_outlet():
     }
     check_input(data)
     res = query_objects(Cashbook, data, [
-        'id', 'title', 'content',
+        'id', 'title', 'content', 'template',
         {'name': 'accounting_date', 'serializer': 'date'},
     ])
-
-    response = make_response(create_xlsx_workbook(res[0]))
+    book_data = res[0]
+    if book_data['template'] == '平桥乡':
+        response = make_response(create_pingqiaoxiang_workbook(book_data))
     response.headers["Content-Disposition"] = "attachment; filename={}.xlsx".format(res[0]['id'])
     response.headers['Content-Type'] = 'application/x-xlsx'
-    # response = make_response(send_file())
     return response

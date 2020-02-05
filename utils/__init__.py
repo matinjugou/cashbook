@@ -31,7 +31,7 @@ def make_json_response(data):
     return Response(json.dumps(data), content_type='application/json')
 
 
-def create_xlsx_workbook(data):
+def create_pingqiaoxiang_workbook(data):
     out_io = io.BytesIO()
     workbook = xlsxwriter.Workbook(out_io)
     worksheet = workbook.add_worksheet(data['accounting_date'])

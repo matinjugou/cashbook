@@ -11,4 +11,5 @@ class Cashbook(Base):
     id = Column(String(32), nullable=False, primary_key=True)
     title = Column(String(1024), nullable=False, default='')
     content = Column(String(4096), nullable=False, default='')
+    template = Column(String(4096), nullable=False, default='平桥乡')
     accounting_date = Column(Date, nullable=False, default=datetime.now())
