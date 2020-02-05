@@ -1,4 +1,8 @@
 Flask
+sqlalchemy
 flask-cors
 xlwt
 werkzeug
+sqlalchemy-migrate
+pymysql
+xlsxwriter
