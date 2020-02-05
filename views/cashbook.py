@@ -27,7 +27,7 @@ def cashbook_index():
         }
         check_input(data)
         create_object(Cashbook, data, [
-            'id', 'title', 'content', 'template',
+            'id', 'title', 'content',
             {'name': 'accounting_date', 'typer': 'date'},
         ])
         return make_json_response({
