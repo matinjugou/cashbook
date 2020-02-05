@@ -65,7 +65,12 @@ def cashbook_index():
 
 @cashbook.route('/list', methods=['GET'])
 def cashbook_list():
-    res = query_objects(Cashbook, request.args, [
+    query = {
+        'template': request.args.get('template', None),
+    }
+    if query['template'] is None:
+        query = {}
+    res = query_objects(Cashbook, query, [
         'id', 'title', 'template', {'name': 'accounting_date', 'serializer': 'date'},
     ])
     return make_json_response(res)
