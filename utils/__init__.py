@@ -45,16 +45,16 @@ def create_pingqiaoxiang_workbook(data):
     worksheet.set_column('G:G', 17)
     title_format = workbook.add_format({
         "font_name": "华文楷体",
-        "font_size": 22,
-        "border": 1,
+        "font_size": 24,
         "align": "center",
         "valign": "vcenter",
     })
+    title_format.set_text_wrap()
     worksheet.merge_range(0, 0, 0, 6, data['title'], title_format)
     header_format = workbook.add_format({
         "bold": True,
         "font_name": "仿宋",
-        "font_size": 18,
+        "font_size": 20,
         "border": 1,
         "align": "center",
         "valign": "vcenter",
@@ -65,11 +65,12 @@ def create_pingqiaoxiang_workbook(data):
                         header_format)
     cell_format = workbook.add_format({
         "font_name": "仿宋",
-        "font_size": 16,
+        "font_size": 20,
         "border": 1,
         "align": "center",
         "valign": "vcenter",
     })
+    cell_format.set_text_wrap()
     content = json.loads(data['content'])
     row = 3
     for item in content['items']:
@@ -86,13 +87,21 @@ def create_pingqiaoxiang_workbook(data):
         row += 1
     row -= 1
     worksheet.set_row(row, 50)
+    worksheet.merge_range(2, 6, row, 6, '', cell_format)
     worksheet.write(row, 0, '合计', cell_format)
     worksheet.merge_range(row, 1, row, 4, content['amount_chies'], cell_format)
     worksheet.write(row, 5, content['amount'], cell_format)
     worksheet.write(row, 6, '', cell_format)
     row += 2
     date_data = data['accounting_date'].split('-')
-    worksheet.write(row, 5, date_data[0] + '年' + date_data[1] + '月' + date_data[2] + '日')
+    worksheet.set_row(row, 40)
+    time_format = workbook.add_format({
+        "font_name": "仿宋",
+        "font_size": 16,
+        "align": "center",
+        "valign": "vcenter",
+    })
+    worksheet.write(row, 5, date_data[0] + '年' + date_data[1] + '月' + date_data[2] + '日', time_format)
     workbook.close()
     out_io.seek(0)
     return out_io.getvalue()
