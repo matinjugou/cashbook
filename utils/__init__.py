@@ -94,14 +94,13 @@ def create_pingqiaoxiang_workbook(data):
     worksheet.write(row, 6, '', cell_format)
     row += 2
     date_data = data['accounting_date'].split('-')
-    worksheet.set_row(row, 40)
-    time_format = workbook.add_format({
-        "font_name": "仿宋",
-        "font_size": 16,
+    worksheet.set_row(row, 50)
+    time_cell_format = workbook.add_format({
+        "font_size": 20,
         "align": "center",
         "valign": "vcenter",
     })
-    worksheet.write(row, 5, date_data[0] + '年' + date_data[1] + '月' + date_data[2] + '日', time_format)
+    worksheet.write(row, 5, date_data[0] + '年' + date_data[1] + '月' + date_data[2] + '日', time_cell_format)
     workbook.close()
     out_io.seek(0)
     return out_io.getvalue()
