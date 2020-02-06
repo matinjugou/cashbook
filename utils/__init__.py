@@ -119,15 +119,16 @@ def create_xiaohuashan_workbook(data):
     worksheet.set_column('A:A', 10)
     worksheet.set_column('B:B', 10)
     worksheet.set_column('C:C', 120)
+    content = json.loads(data['content'])
     title_format = workbook.add_format({
         "font_name": "宋体",
         "bold": True,
         "font_size": 16,
-        "align": "center",
-        "valign": "vcenter",
+        "align": "left",
+        "valign": "bottom",
     })
     title_format.set_text_wrap()
-    worksheet.merge_range(0, 0, 0, 2, data['title'], title_format)
+    worksheet.merge_range(0, 0, 0, 2, '裕安支队小华山大队%s月份市容环境整治情况' % content['month'], title_format)
     header_format = workbook.add_format({
         "font_name": "宋体",
         "font_size": 14,
@@ -162,7 +163,6 @@ def create_xiaohuashan_workbook(data):
     worksheet.write(7, 1, '人工', header_format)
     worksheet.merge_range(8, 0, 8, 1, '其他', header_format)
     worksheet.merge_range(9, 0, 9, 1, '合计', header_format)
-    content = json.loads(data['content'])
     date_data = data['accounting_date'].split('-')
     worksheet.write_column('C2', [
         content['project'],
@@ -173,7 +173,7 @@ def create_xiaohuashan_workbook(data):
         content['cost_device'],
         content['cost_employee'],
         content['other'],
-        '合计' + content['amount_chies'] + '    ' + content['amount'] + '元'
+        '合计' + content['amount_chies'] + '    计' + content['amount'] + '元'
     ], cell_format)
     worksheet.set_landscape()
     worksheet.fit_to_pages(1, 1)
