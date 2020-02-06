@@ -113,6 +113,8 @@ def create_xiaohuashan_workbook(data):
     out_io = io.BytesIO()
     workbook = xlsxwriter.Workbook(out_io)
     worksheet = workbook.add_worksheet(data['accounting_date'])
+    date_data = data['accounting_date'].split('-')
+    month_word = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二']
     worksheet.center_horizontally()
     worksheet.set_paper(9)
     worksheet.set_row(0, 70)
@@ -128,7 +130,8 @@ def create_xiaohuashan_workbook(data):
         "valign": "bottom",
     })
     title_format.set_text_wrap()
-    worksheet.merge_range(0, 0, 0, 2, '裕安支队小华山大队%s月份市容环境整治情况' % content['month'], title_format)
+    worksheet.merge_range(0, 0, 0, 2, '裕安支队小华山大队%s月份市容环境整治情况' % month_word[int(date_data[1]) - 1],
+                          title_format)
     header_format = workbook.add_format({
         "font_name": "宋体",
         "font_size": 14,
@@ -163,7 +166,6 @@ def create_xiaohuashan_workbook(data):
     worksheet.write(7, 1, '人工', header_format)
     worksheet.merge_range(8, 0, 8, 1, '其他', header_format)
     worksheet.merge_range(9, 0, 9, 1, '合计', header_format)
-    date_data = data['accounting_date'].split('-')
     worksheet.write_column('C2', [
         content['project'],
         date_data[0] + '年' + date_data[1] + '月' + date_data[2] + '日',
