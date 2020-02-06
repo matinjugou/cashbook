@@ -123,7 +123,7 @@ def create_xiaohuashan_workbook(data):
     title_format = workbook.add_format({
         "font_name": "宋体",
         "bold": True,
-        "font_size": 16,
+        "font_size": 24,
         "align": "left",
         "valign": "bottom",
     })
@@ -149,8 +149,8 @@ def create_xiaohuashan_workbook(data):
     worksheet.set_row(3, 40)
     worksheet.set_row(4, 40)
     worksheet.set_row(5, 40)
-    worksheet.set_row(6, 40)
-    worksheet.set_row(7, 40)
+    worksheet.set_row(6, 80)
+    worksheet.set_row(7, 80)
     worksheet.set_row(8, 40)
     worksheet.set_row(9, 40)
     worksheet.merge_range(1, 0, 1, 1, '整治项目', header_format)
