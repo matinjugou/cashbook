@@ -114,16 +114,15 @@ def create_xiaohuashan_workbook(data):
     workbook = xlsxwriter.Workbook(out_io)
     worksheet = workbook.add_worksheet(data['accounting_date'])
     worksheet.center_horizontally()
-    worksheet.center_vertically()
     worksheet.set_paper(9)
     worksheet.set_row(0, 70)
     worksheet.set_column('A:A', 10)
     worksheet.set_column('B:B', 10)
-    worksheet.set_column('C:C', 100)
+    worksheet.set_column('C:C', 120)
     title_format = workbook.add_format({
         "font_name": "宋体",
         "bold": True,
-        "font_size": 20,
+        "font_size": 16,
         "align": "center",
         "valign": "vcenter",
     })
@@ -131,14 +130,14 @@ def create_xiaohuashan_workbook(data):
     worksheet.merge_range(0, 0, 0, 2, data['title'], title_format)
     header_format = workbook.add_format({
         "font_name": "宋体",
-        "font_size": 16,
+        "font_size": 14,
         "border": 1,
         "align": "center",
         "valign": "vcenter",
     })
     cell_format = workbook.add_format({
         "font_name": "宋体",
-        "font_size": 16,
+        "font_size": 14,
         "border": 1,
         "align": "left",
         "valign": "vcenter",
