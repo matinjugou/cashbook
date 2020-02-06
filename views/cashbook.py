@@ -22,12 +22,13 @@ def cashbook_index():
         data = {
             'id': 'BOOK%s' % ''.join(uuid.uuid1().__str__().split('-'))[4:],
             'title': request.form.get('title', 'missed'),
+            'template': request.form.get('template', 'missed'),
             'content': request.form.get('content', 'missed'),
             'accounting_date': request.form.get('accounting_date', 'missed'),
         }
         check_input(data)
         create_object(Cashbook, data, [
-            'id', 'title', 'content',
+            'id', 'title', 'content', 'template',
             {'name': 'accounting_date', 'typer': 'date'},
         ])
         return make_json_response({
@@ -39,12 +40,11 @@ def cashbook_index():
             'id': request.form.get('id', 'missed'),
             'title': request.form.get('title', None),
             'content': request.form.get('content', None),
-            'template': request.form.get('template', None),
             'accounting_date': request.form.get('accounting_date', None),
         }
         check_input(data)
         modify_obj(Cashbook, {'id': data['id']}, data, [
-            'id', 'title', 'content', 'template',
+            'id', 'title', 'content',
             {'name': 'accounting_date', 'typer': 'date'},
         ])
         return make_json_response({
@@ -68,7 +68,7 @@ def cashbook_list():
     query = {
         'template': request.args.get('template', None),
     }
-    if query['template'] is None:
+    if (query['template'] is None) or (query['template'] == 'all'):
         query = {}
     res = query_objects(Cashbook, query, [
         'id', 'title', 'template', {'name': 'accounting_date', 'serializer': 'date'},
@@ -87,8 +87,10 @@ def cashbook_outlet():
         {'name': 'accounting_date', 'serializer': 'date'},
     ])
     book_data = res[0]
-    if book_data['template'] == '平桥乡':
+    if book_data['template'] in ['平桥乡', '西市街道']:
         response = make_response(create_pingqiaoxiang_workbook(book_data))
+    else:
+        response = make_response(create_xiaohuashan_workbook(book_data))
     response.headers["Content-Disposition"] = "attachment; filename={}.xlsx".format(res[0]['id'])
     response.headers['Content-Type'] = 'application/x-xlsx'
     return response
