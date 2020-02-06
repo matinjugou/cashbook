@@ -173,7 +173,7 @@ def create_xiaohuashan_workbook(data):
         content['cost_device'],
         content['cost_employee'],
         content['other'],
-        '合计' + content['amount_chies'] + '    计' + content['amount'] + '元'
+        '合计' + content['amount_chies'] + '    计' + str(content['amount']) + '元'
     ], cell_format)
     worksheet.set_landscape()
     worksheet.fit_to_pages(1, 1)
