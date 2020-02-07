@@ -89,8 +89,10 @@ def cashbook_outlet():
     book_data = res[0]
     if book_data['template'] in ['平桥乡', '西市街道']:
         response = make_response(create_pingqiaoxiang_workbook(book_data))
-    else:
+    elif book_data['template'] == '小华山':
         response = make_response(create_xiaohuashan_workbook(book_data))
+    else:
+        response = make_response(create_chengnanzhne_workbook(book_data))
     response.headers["Content-Disposition"] = "attachment; filename={}.xlsx".format(res[0]['id'])
     response.headers['Content-Type'] = 'application/x-xlsx'
     return response

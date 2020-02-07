@@ -196,3 +196,61 @@ def create_xiaohuashan_workbook(data):
     workbook.close()
     out_io.seek(0)
     return out_io.getvalue()
+
+
+def create_chengnanzhne_workbook(data):
+    out_io = io.BytesIO()
+    workbook = xlsxwriter.Workbook(out_io)
+    worksheet = workbook.add_worksheet(data['accounting_date'])
+    worksheet.center_horizontally()
+    worksheet.set_paper(9)
+    worksheet.set_row(0, 70)
+    worksheet.set_column('A:A', 80)
+    content = json.loads(data['content'])
+    title_format = workbook.add_format({
+        "font_name": "微软雅黑",
+        "bold": True,
+        "font_size": 24,
+        "align": "center",
+        "valign": "vcenter",
+    })
+    title_format.set_text_wrap()
+    worksheet.write(0, 0, '城南镇文明创建临时用工用车申报单', title_format)
+    cell_format = workbook.add_format({
+        "font_name": "仿宋",
+        "font_size": 18,
+        "border": 1,
+        "align": "left",
+        "valign": "top",
+    })
+    cell_format.set_text_wrap()
+    worksheet.set_row(1, 80)
+    worksheet.set_row(2, 40)
+    worksheet.set_row(3, 340)
+    worksheet.set_row(4, 120)
+    worksheet.set_row(5, 80)
+    worksheet.write(1, 0, '申报事项：%s' % content['cause'], cell_format)
+    worksheet.write(2, 0, '申报时间：%s年%s月%s日%s时  至  %s年%s月%s日%s时'
+                    % (content['start_time'][0], content['start_time'][1], content['start_time'][2],
+                       content['start_time'][3],
+                       content['end_time'][0], content['end_time'][1], content['end_time'][2],
+                       content['end_time'][3]),
+                    cell_format)
+    content_text = '申报内容：\n\r1、车辆：\n\r'
+    for item in content['vehicle_items']:
+        content_text += '%s（型号），%s辆，%s元；\n\r' % (item['name'], item['count'], item['amount'])
+    content_text += '2、工人：\n\r'
+    for item in content['employee_items']:
+        content_text += '%s%s人，%s元；\n\r' % (item['name'], item['count'], item['amount'])
+    content_text += '3、机械：\n\r'
+    for item in content['device_items']:
+        content_text += '%s（型号），%s元；\n\r' % (item['name'], item['amount'])
+    content_text += '合计：%s元' % str(content['amount'])
+    worksheet.write(3, 0, '%s' % content_text, cell_format)
+    worksheet.write(4, 0, '\n\r申报人：______________，______________（签字）\n\r\n\r审核人：______________（签字）', cell_format)
+    worksheet.write(5, 0, '备注：%s' % content['amount_chies'], cell_format)
+    worksheet.fit_to_pages(1, 1)
+    workbook.close()
+    out_io.seek(0)
+    return out_io.getvalue()
+
