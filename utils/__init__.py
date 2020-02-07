@@ -5,11 +5,9 @@ from utils.errors import *
 from utils.crud import *
 import settings
 
-import xlwt
 import xlsxwriter
 import json
-import io
-import mimetypes
+import jwt
 
 import io
 from flask import Response, json
@@ -25,6 +23,22 @@ def check_input(input_dict):
     if len(missed_key) > 0:
         logger.error('缺少参数%s' % ','.join(missed_key))
         raise BaseError('缺少参数%s' % ','.join(missed_key), status_code=400)
+
+
+def sign_token(exp):
+    payload = {
+        'iat': int(time.time()),
+        'exp': int(time.time()) + exp * 60,
+    }
+    return jwt.encode(payload, settings.jwt_secret, algorithm='HS256').decode()
+
+
+def verify_token(token):
+    try:
+        jwt.decode(token, settings.jwt_secret, algorithm='HS256')
+        return True
+    except Exception as e:
+        return False
 
 
 def make_json_response(data):

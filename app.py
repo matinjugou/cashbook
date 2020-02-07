@@ -2,7 +2,7 @@ from utils import *
 from views.cashbook import cashbook
 import settings
 
-from flask import Flask, make_response
+from flask import Flask, make_response, request
 from flask_cors import *
 
 app = Flask(__name__)
@@ -18,9 +18,28 @@ def error_response(error):
     return response
 
 
-@app.route('/')
+@app.route('/api')
 def hello_world():
     return 'Hello World!'
+
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    password = request.form.get('password', '')
+    if password != settings.password:
+        raise AuthError
+    else:
+        token = sign_token(120)
+        return make_json_response({'token': token})
+
+
+@app.before_request
+def before_request_check():
+    if request.method != 'OPTIONS':
+        if request.path != '/api/login':
+            token = request.headers.get('Authorization', '1 1').split(' ')[1]
+            if not verify_token(token):
+                raise AuthError
 
 
 if __name__ == '__main__':

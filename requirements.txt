@@ -1,7 +1,7 @@
 Flask
 sqlalchemy
 flask-cors
-xlwt
+PyJWT
 werkzeug
 sqlalchemy-migrate
 pymysql
