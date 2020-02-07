@@ -2,6 +2,7 @@ from utils import *
 
 from flask import Blueprint, request, make_response
 import uuid
+import json
 
 cashbook = Blueprint('cashbook', __name__)
 
@@ -96,3 +97,28 @@ def cashbook_outlet():
     response.headers["Content-Disposition"] = "attachment; filename={}.xlsx".format(res[0]['id'])
     response.headers['Content-Type'] = 'application/x-xlsx'
     return response
+
+
+@cashbook.route('/amount', methods=['GET'])
+def cashbook_amount():
+    res = query_objects(Cashbook, {}, ['template', 'content'])
+    book_set = {
+        '平桥乡': [],
+        '小华山': [],
+        '西市街道': [],
+        '城南镇': []
+    }
+    for book in res:
+        res_content = json.loads(book['content'])
+        book_set[book['template']].append(res_content['amount'])
+    amount_set = {
+        '平桥乡': sum(book_set['平桥乡']),
+        '小华山': sum(book_set['小华山']),
+        '西市街道': sum(book_set['西市街道']),
+        '城南镇': sum(book_set['城南镇'])
+    }
+    total_amount = 0
+    for key in amount_set:
+        total_amount += amount_set[key]
+    amount_set['total'] = total_amount
+    return make_json_response(amount_set)
