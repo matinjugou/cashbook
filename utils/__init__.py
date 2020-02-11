@@ -209,7 +209,6 @@ def create_chengnanzhne_workbook(data):
     content = json.loads(data['content'])
     title_format = workbook.add_format({
         "font_name": "微软雅黑",
-        "bold": True,
         "font_size": 24,
         "align": "center",
         "valign": "vcenter",
@@ -218,7 +217,7 @@ def create_chengnanzhne_workbook(data):
     worksheet.write(0, 0, '城南镇文明创建临时用工用车申报单', title_format)
     cell_format = workbook.add_format({
         "font_name": "仿宋",
-        "font_size": 18,
+        "font_size": 15,
         "border": 1,
         "align": "left",
         "valign": "top",
