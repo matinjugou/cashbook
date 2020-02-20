@@ -15,7 +15,7 @@ def cashbook_index():
         }
         check_input(query)
         res = query_objects(Cashbook, query, [
-            'id', 'title', 'content', 'template',
+            'id', 'title', 'content', 'template', 'area',
             {'name': 'accounting_date', 'serializer': 'date'},
         ])
         return make_json_response(res)
@@ -23,13 +23,14 @@ def cashbook_index():
         data = {
             'id': 'BOOK%s' % ''.join(uuid.uuid1().__str__().split('-'))[4:],
             'title': request.form.get('title', 'missed'),
+            'area': request.form.get('area', 'missed'),
             'template': request.form.get('template', 'missed'),
             'content': request.form.get('content', 'missed'),
             'accounting_date': request.form.get('accounting_date', 'missed'),
         }
         check_input(data)
         create_object(Cashbook, data, [
-            'id', 'title', 'content', 'template',
+            'id', 'title', 'content', 'template', 'area',
             {'name': 'accounting_date', 'typer': 'date'},
         ])
         return make_json_response({
@@ -40,12 +41,13 @@ def cashbook_index():
         data = {
             'id': request.form.get('id', 'missed'),
             'title': request.form.get('title', None),
+            'area': request.form.get('area', None),
             'content': request.form.get('content', None),
             'accounting_date': request.form.get('accounting_date', None),
         }
         check_input(data)
         modify_obj(Cashbook, {'id': data['id']}, data, [
-            'id', 'title', 'content',
+            'id', 'title', 'content', 'area',
             {'name': 'accounting_date', 'typer': 'date'},
         ])
         return make_json_response({
@@ -67,12 +69,12 @@ def cashbook_index():
 @cashbook.route('/list', methods=['GET'])
 def cashbook_list():
     query = {
-        'template': request.args.get('template', None),
+        'area': request.args.get('area', None),
     }
-    if (query['template'] is None) or (query['template'] == 'all'):
+    if (query['area'] is None) or (query['area'] == 'all'):
         query = {}
     res = query_objects(Cashbook, query, [
-        'id', 'title', 'template', {'name': 'accounting_date', 'serializer': 'date'},
+        'id', 'title', 'area', {'name': 'accounting_date', 'serializer': 'date'},
     ])
     return make_json_response(res)
 
@@ -84,7 +86,7 @@ def cashbook_outlet():
     }
     check_input(data)
     res = query_objects(Cashbook, data, [
-        'id', 'title', 'content', 'template',
+        'id', 'title', 'content', 'template', 'area',
         {'name': 'accounting_date', 'serializer': 'date'},
     ])
     book_data = res[0]
@@ -101,7 +103,7 @@ def cashbook_outlet():
 
 @cashbook.route('/amount', methods=['GET'])
 def cashbook_amount():
-    res = query_objects(Cashbook, {}, ['template', 'content'])
+    res = query_objects(Cashbook, {}, ['area', 'content'])
     book_set = {
         '平桥乡': [],
         '小华山': [],
@@ -110,7 +112,7 @@ def cashbook_amount():
     }
     for book in res:
         res_content = json.loads(book['content'])
-        book_set[book['template']].append(res_content['amount'])
+        book_set[book['area']].append(res_content['amount'])
     amount_set = {
         '平桥乡': sum(book_set['平桥乡']),
         '小华山': sum(book_set['小华山']),
