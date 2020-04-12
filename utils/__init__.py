@@ -237,13 +237,13 @@ def create_chengnanzhne_workbook(data):
                     cell_format)
     content_text = '申报内容：\n\r1、车辆：\n\r'
     for item in content['vehicle_items']:
-        content_text += '%s（型号），%s辆，%s元；\n\r' % (item['name'], item['count'], item['amount'])
+        content_text += '%s，%s辆，%s元；\n\r' % (item['name'], item['count'], item['amount'])
     content_text += '2、工人：\n\r'
     for item in content['employee_items']:
         content_text += '%s%s人，%s元；\n\r' % (item['name'], item['count'], item['amount'])
     content_text += '3、机械：\n\r'
     for item in content['device_items']:
-        content_text += '%s（型号），%s元；\n\r' % (item['name'], item['amount'])
+        content_text += '%s，%s元；\n\r' % (item['name'], item['amount'])
     content_text += '\n\r\n\r合计：%s元' % str(content['amount'])
     worksheet.write(3, 0, '%s' % content_text, cell_format)
     worksheet.write(4, 0, '\n\r申报人：______________，______________（签字）\n\r\n\r审核人：______________（签字）', cell_format)
