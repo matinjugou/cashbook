@@ -35,9 +35,10 @@ def sign_token(exp):
 
 def verify_token(token):
     try:
-        jwt.decode(token, settings.jwt_secret, algorithm='HS256')
+        jwt.decode(token, settings.jwt_secret, algorithms='HS256')
         return True
     except Exception as e:
+        logger.error(e)
         return False
 
 

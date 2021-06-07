@@ -37,7 +37,10 @@ def login():
 def before_request_check():
     if request.method != 'OPTIONS':
         if request.path != '/api/login':
-            token = request.headers['Authorization'].split(' ')[1]
+            token = request.headers['Authorization'].split(' ')
+            if len(token) < 2:
+                raise AuthError
+            token = token[1]
             if not verify_token(token):
                 raise AuthError
 
